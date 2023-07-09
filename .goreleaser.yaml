@@ -1,0 +1,41 @@
+project_name: "dnsee"
+
+# before are hooks that will be run before any builds are done, so good to put install scripts and stuff that your builds need here
+before:
+  hooks:
+    # Remove unused packaged from the build process
+    - go mod tidy
+    - go generate
+
+builds:
+  - main: ./main.go
+    binary: dnsee
+    goos: ["linux", "darwin", "windows"]
+    goarch: ["386", "amd64", "arm64"]
+    ldflags:
+      - -s -w -X "github.com/bschaatsbergen/dnsee/cmd.version={{.Version}}"
+    env:
+      - CGO_ENABLED=0
+
+changelog:
+  sort: "asc"
+  filters:
+    exclude: ["^docs:", "demo", "^hugo:", "Merge pull request", "Merge branch"]
+
+brews:
+  - tap:
+      owner: bschaatsbergen
+      name: homebrew-dnsee
+    name: dnsee
+    homepage: "https://github.com/bschaatsbergen/dnsee"
+    description: "See records for a domain name"
+    license: "MIT"
+    skip_upload: auto
+    commit_author:
+      name: Bruno Schaatsbergen
+      email: git@bschaatsbergen.com
+    folder: Formula
+    install: |-
+      bin.install "dnsee"
+    test: |
+      system "#{bin}/dnsee -v"
