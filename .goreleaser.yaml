@@ -28,7 +28,7 @@ brews:
       name: homebrew-dnsee
     name: dnsee
     homepage: "https://github.com/bschaatsbergen/dnsee"
-    description: "See records for a domain name"
+    description: "Check DNS configurations quickly"
     license: "MIT"
     skip_upload: auto
     commit_author:

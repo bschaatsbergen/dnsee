@@ -1,7 +1,7 @@
 # dnsee
 [![Release](https://github.com/bschaatsbergen/dnsee/actions/workflows/goreleaser.yaml/badge.svg)](https://github.com/bschaatsbergen/dnsee/actions/workflows/goreleaser.yaml) ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/bschaatsbergen/dnsee) ![GitHub commits since latest release (by SemVer)](https://img.shields.io/github/commits-since/bschaatsbergen/dnsee/latest) [![Go Reference](https://pkg.go.dev/badge/github.com/bschaatsbergen/dnsee.svg)](https://pkg.go.dev/github.com/bschaatsbergen/dnsee)
 
-See records for a domain name
+Check DNS configurations quickly
 
 ## Brew
 To install dnsee using brew, simply do the below.

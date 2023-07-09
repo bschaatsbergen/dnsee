@@ -18,7 +18,7 @@ var (
 
 	rootCmd = &cobra.Command{
 		Use:     "dnsee",
-		Short:   "dnsee - See records for a domain name",
+		Short:   "dnsee - Check DNS configurations quickly",
 		Version: version,
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(args) != 1 {
