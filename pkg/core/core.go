@@ -35,12 +35,6 @@ func GetQueryTypes() []model.QueryType {
 		{Type: dns.TypePTR, Name: "PTR"},
 		{Type: dns.TypeDNSKEY, Name: "DNSKEY"},
 		{Type: dns.TypeDS, Name: "DS"},
-		{Type: dns.TypeNSEC, Name: "NSEC"},
-		{Type: dns.TypeNSEC3, Name: "NSEC3"},
-		{Type: dns.TypeNSEC3PARAM, Name: "NSEC3PARAM"},
-		{Type: dns.TypeTLSA, Name: "TLSA"},
-		{Type: dns.TypeCAA, Name: "CAA"},
-		{Type: dns.TypeANY, Name: "ANY"},
 	}
 }
 
@@ -83,6 +77,14 @@ func DisplayRecords(domainName string, queryType struct {
 		case dns.TypeNS:
 			if nsRecord, ok := ans.(*dns.NS); ok {
 				fmt.Printf("%s\t%s.\t%d\t%s\n", color.HiYellowString(queryType.Name), color.HiBlueString(domainName), nsRecord.Hdr.Ttl, nsRecord.Ns)
+			}
+		case dns.TypeSOA:
+			if soaRecord, ok := ans.(*dns.SOA); ok {
+				fmt.Printf("%s\t%s.\t%d\t%s\t%s\n", color.HiYellowString(queryType.Name), color.HiBlueString(domainName), soaRecord.Hdr.Ttl, soaRecord.Ns, soaRecord.Mbox)
+			}
+		case dns.TypePTR:
+			if ptrRecord, ok := ans.(*dns.PTR); ok {
+				fmt.Printf("%s\t%s.\t%d\t%s\n", color.HiYellowString(queryType.Name), color.HiBlueString(domainName), ptrRecord.Hdr.Ttl, ptrRecord.Ptr)
 			}
 		}
 	}
