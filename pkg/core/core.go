@@ -31,10 +31,7 @@ func GetQueryTypes() []model.QueryType {
 		{Type: dns.TypeTXT, Name: "TXT"},
 		{Type: dns.TypeNS, Name: "NS"},
 		{Type: dns.TypeSOA, Name: "SOA"},
-		{Type: dns.TypeSRV, Name: "SRV"},
 		{Type: dns.TypePTR, Name: "PTR"},
-		{Type: dns.TypeDNSKEY, Name: "DNSKEY"},
-		{Type: dns.TypeDS, Name: "DS"},
 	}
 }
 
