@@ -2,18 +2,19 @@ package core
 
 import (
 	"fmt"
-	"os"
 	"runtime"
 	"time"
 
 	model "github.com/bschaatsbergen/dnsee/pkg/model"
 	"github.com/fatih/color"
 	"github.com/miekg/dns"
+	"github.com/sirupsen/logrus"
 )
 
-const Windows = "windows"
-const ResolverPath = "/etc/resolv.conf"
+const windows = "windows"
+const resolverPath = "/etc/resolv.conf"
 
+// GetQueryTypes returns a slice of all supported DNS query types
 func GetQueryTypes() []model.QueryType {
 	return []model.QueryType{
 		{Type: dns.TypeA, Name: "A"},
@@ -27,30 +28,49 @@ func GetQueryTypes() []model.QueryType {
 	}
 }
 
+// FilterQueryTypes filters the queryTypes slice to only include the query type specified by the user
+func FilterQueryTypes(queryTypes []model.QueryType, userSpecifiedQueryType string) []model.QueryType {
+	var filteredQueryTypes []model.QueryType
+	for _, queryType := range queryTypes {
+		if queryType.Name == userSpecifiedQueryType {
+			filteredQueryTypes = append(filteredQueryTypes, queryType)
+			break
+		}
+	}
+	return filteredQueryTypes
+}
+
+// PrepareDNSQuery prepares a DNS query for a given domain name and query type
 func PrepareDNSQuery(domainName string, queryType uint16) dns.Msg {
 	msg := dns.Msg{}
 	msg.SetQuestion(dns.Fqdn(domainName), queryType)
 	return msg
 }
 
+// SendDNSQuery sends a DNS query to a given DNS server
 func SendDNSQuery(client *dns.Client, msg dns.Msg, dnsServerIP string) (*dns.Msg, time.Duration, error) {
 	if dnsServerIP == "" {
 		goOS := runtime.GOOS
-		if goOS == Windows {
-			fmt.Println("Unable to retrieve DNS configuration on Windows systems. \nPlease specify ip explicitely with the --dns-server-ip flag.")
-			os.Exit(2)
+		if goOS == windows {
+			logrus.Fatal("error: Unable to retrieve DNS configuration on Windows. \nPlease specify a DNS server IP explicitely with the `--dns-server-ip` flag.")
 		}
-		conf, err := dns.ClientConfigFromFile(ResolverPath)
+		conf, err := dns.ClientConfigFromFile(resolverPath)
 		if err != nil {
-			fmt.Fprintln(os.Stderr, err)
-			fmt.Println("Could not retrieve DNS server ip from system configuration. \nPlease specify ip explicitely with the --dns-server-ip flag.")
-			os.Exit(2)
+			logrus.Errorf("error: %s. Unable to retrieve DNS configuration.", err)
+			logrus.Fatal("Please specify a DNS server IP explicitely with the `--dns-server-ip` flag.")
 		}
 		dnsServerIP = conf.Servers[0]
 	}
-	return client.Exchange(&msg, dnsServerIP+":53")
+	logrus.Debugf("Sending DNS query to %s", dnsServerIP)
+	response, timeDuration, err := client.Exchange(&msg, dnsServerIP+":53")
+	if err != nil {
+		logrus.Fatal(err)
+	}
+	logrus.Debugf("Received DNS response from %s, Round-trip time: %s", dnsServerIP, timeDuration)
+	return response, timeDuration, nil
 }
 
+// DisplayRecords displays the DNS records returned by the DNS server
 func DisplayRecords(domainName string, queryType struct {
 	Type uint16
 	Name string
