@@ -17,7 +17,7 @@ type PlainFormatter struct{}
 
 var (
 	version   string
-	flagStore model.Flagsore
+	flagStore model.Flagstore
 
 	rootCmd = &cobra.Command{
 		Use:     "dnsee",

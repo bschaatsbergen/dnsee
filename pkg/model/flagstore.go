@@ -1,6 +1,6 @@
 package model
 
-type Flagsore struct {
+type Flagstore struct {
 	DNSServerIP            string
 	UserSpecifiedQueryType string
 	Debug                  bool
