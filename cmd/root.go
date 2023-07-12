@@ -54,7 +54,7 @@ var (
 
 func init() {
 	rootCmd.CompletionOptions.DisableDefaultCmd = true
-	rootCmd.Flags().StringVar(&dnsServerIP, "dns-server-ip", "8.8.8.8", "IP address of the DNS server")
+	rootCmd.Flags().StringVar(&dnsServerIP, "dns-server-ip", "", "IP address of the DNS server")
 	rootCmd.Flags().StringVarP(&userSpecifiedQueryType, "query-type", "q", "", "Specific query type to filter on")
 }
 

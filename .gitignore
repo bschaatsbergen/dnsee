@@ -6,7 +6,7 @@
 *.dylib
 
 # dnsee binary
-./dnsee
+dnsee
 
 # Test binary, built with `go test -c`
 *.test

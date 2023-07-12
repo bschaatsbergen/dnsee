@@ -2,6 +2,8 @@ package core
 
 import (
 	"fmt"
+	"os"
+	"runtime"
 	"time"
 
 	model "github.com/bschaatsbergen/dnsee/pkg/model"
@@ -9,18 +11,8 @@ import (
 	"github.com/miekg/dns"
 )
 
-func GetDNSRecords(domainName string, recordType uint16, dnsServerIP string) ([]dns.RR, error) {
-	msg := dns.Msg{}
-	msg.SetQuestion(dns.Fqdn(domainName), recordType)
-
-	client := dns.Client{}
-	response, _, err := client.Exchange(&msg, dnsServerIP)
-	if err != nil {
-		return nil, err
-	}
-
-	return response.Answer, nil
-}
+const Windows = "windows"
+const ResolverPath = "/etc/resolv.conf"
 
 func GetQueryTypes() []model.QueryType {
 	return []model.QueryType{
@@ -42,6 +34,20 @@ func PrepareDNSQuery(domainName string, queryType uint16) dns.Msg {
 }
 
 func SendDNSQuery(client *dns.Client, msg dns.Msg, dnsServerIP string) (*dns.Msg, time.Duration, error) {
+	if dnsServerIP == "" {
+		goOS := runtime.GOOS
+		if goOS == Windows {
+			fmt.Println("Unable to retrieve DNS configuration on Windows systems. \nPlease specify ip explicitely with the --dns-server-ip flag.")
+			os.Exit(2)
+		}
+		conf, err := dns.ClientConfigFromFile(ResolverPath)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			fmt.Println("Could not retrieve DNS server ip from system configuration. \nPlease specify ip explicitely with the --dns-server-ip flag.")
+			os.Exit(2)
+		}
+		dnsServerIP = conf.Servers[0]
+	}
 	return client.Exchange(&msg, dnsServerIP+":53")
 }
 
