@@ -65,7 +65,7 @@ func init() {
 	setupCobraUsageTemplate()
 	rootCmd.CompletionOptions.DisableDefaultCmd = true
 	rootCmd.Flags().StringVar(&flagStore.DNSServerIP, "dns-server-ip", "", "IP address of the DNS server")
-	rootCmd.Flags().StringVarP(&flagStore.UserSpecifiedQueryType, "query-type", "q", "", "specific query type to filter on")
+	rootCmd.Flags().StringVarP(&flagStore.UserSpecifiedQueryType, "query-type", "q", "", "specific query type(s) to filter on")
 	rootCmd.Flags().BoolVarP(&flagStore.Debug, "debug", "d", false, "verbose logging")
 }
 
