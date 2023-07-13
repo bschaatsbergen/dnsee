@@ -38,6 +38,9 @@ func FilterQueryTypes(queryTypes []model.QueryType, userSpecifiedQueryType strin
 			break
 		}
 	}
+	if len(filteredQueryTypes) == 0 {
+		logrus.Fatal("error: Invalid or unsupported query type provided.")
+	}
 	return filteredQueryTypes
 }
 
