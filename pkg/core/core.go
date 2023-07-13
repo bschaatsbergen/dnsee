@@ -3,6 +3,7 @@ package core
 import (
 	"fmt"
 	"runtime"
+	"strings"
 	"time"
 
 	model "github.com/bschaatsbergen/dnsee/pkg/model"
@@ -32,7 +33,7 @@ func GetQueryTypes() []model.QueryType {
 func FilterQueryTypes(queryTypes []model.QueryType, userSpecifiedQueryType string) []model.QueryType {
 	var filteredQueryTypes []model.QueryType
 	for _, queryType := range queryTypes {
-		if queryType.Name == userSpecifiedQueryType {
+		if queryType.Name == strings.ToUpper(userSpecifiedQueryType) {
 			filteredQueryTypes = append(filteredQueryTypes, queryType)
 			break
 		}
