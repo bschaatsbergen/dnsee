@@ -10,6 +10,7 @@ import (
 	"github.com/fatih/color"
 	"github.com/miekg/dns"
 	"github.com/sirupsen/logrus"
+	"golang.org/x/exp/slices"
 )
 
 const windows = "windows"
@@ -32,10 +33,11 @@ func GetQueryTypes() []model.QueryType {
 // FilterQueryTypes filters the queryTypes slice to only include the query type specified by the user
 func FilterQueryTypes(queryTypes []model.QueryType, userSpecifiedQueryType string) []model.QueryType {
 	var filteredQueryTypes []model.QueryType
+
+	splt := strings.Split(strings.ToUpper(userSpecifiedQueryType), ",")
 	for _, queryType := range queryTypes {
-		if queryType.Name == strings.ToUpper(userSpecifiedQueryType) {
+		if slices.Contains(splt, queryType.Name) {
 			filteredQueryTypes = append(filteredQueryTypes, queryType)
-			break
 		}
 	}
 	if len(filteredQueryTypes) == 0 {
