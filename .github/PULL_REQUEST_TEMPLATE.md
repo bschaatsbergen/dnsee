@@ -6,4 +6,4 @@
 
 ## References
 * Use `Closes #123`, if this PR closes a GitHub issue `#123`
-* If possible, link to the relevant documentation to add some context.
+* If possible, link to relevant documentation to add some context.
