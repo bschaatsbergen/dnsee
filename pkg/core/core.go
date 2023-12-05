@@ -14,7 +14,7 @@ import (
 const windows = "windows"
 const resolverPath = "/etc/resolv.conf"
 
-// GetQueryTypes returns a slice of all supported DNS query types
+// GetQueryTypes returns a slice of all supported DNS query types.
 func GetQueryTypes() []model.QueryType {
 	return []model.QueryType{
 		{Type: dns.TypeA, Name: "A"},
@@ -28,7 +28,7 @@ func GetQueryTypes() []model.QueryType {
 	}
 }
 
-// FilterQueryTypes filters the queryTypes slice to only include the query type specified by the user
+// FilterQueryTypes filters the queryTypes slice to only include the query type specified by the user.
 func FilterQueryTypes(queryTypes []model.QueryType, userSpecifiedQueryType string) []model.QueryType {
 	var filteredQueryTypes []model.QueryType
 	for _, queryType := range queryTypes {
@@ -40,24 +40,24 @@ func FilterQueryTypes(queryTypes []model.QueryType, userSpecifiedQueryType strin
 	return filteredQueryTypes
 }
 
-// PrepareDNSQuery prepares a DNS query for a given domain name and query type
+// PrepareDNSQuery prepares a DNS query for a given domain name and query type.
 func PrepareDNSQuery(domainName string, queryType uint16) dns.Msg {
 	msg := dns.Msg{}
 	msg.SetQuestion(dns.Fqdn(domainName), queryType)
 	return msg
 }
 
-// SendDNSQuery sends a DNS query to a given DNS server
+// SendDNSQuery sends a DNS query to a given DNS server.
 func SendDNSQuery(client *dns.Client, msg dns.Msg, dnsServerIP string) (*dns.Msg, time.Duration, error) {
 	if dnsServerIP == "" {
 		goOS := runtime.GOOS
 		if goOS == windows {
-			logrus.Fatal("error: Unable to retrieve DNS configuration on Windows. \nPlease specify a DNS server IP explicitely with the `--dns-server-ip` flag.")
+			logrus.Fatal("error: Unable to retrieve DNS configuration on Windows. \nPlease specify a DNS server IP explicitly with the `--dns-server-ip` flag.")
 		}
 		conf, err := dns.ClientConfigFromFile(resolverPath)
 		if err != nil {
 			logrus.Errorf("error: %s. Unable to retrieve DNS configuration.", err)
-			logrus.Fatal("Please specify a DNS server IP explicitely with the `--dns-server-ip` flag.")
+			logrus.Fatal("Please specify a DNS server IP explicitly with the `--dns-server-ip` flag.")
 		}
 		dnsServerIP = conf.Servers[0]
 	}
@@ -70,7 +70,7 @@ func SendDNSQuery(client *dns.Client, msg dns.Msg, dnsServerIP string) (*dns.Msg
 	return response, timeDuration, nil
 }
 
-// DisplayRecords displays the DNS records returned by the DNS server
+// DisplayRecords displays the DNS records returned by the DNS server.
 func DisplayRecords(domainName string, queryType struct {
 	Type uint16
 	Name string
