@@ -91,7 +91,7 @@ func DisplayRecords(domainName string, queryType struct {
 			}
 		case dns.TypeMX:
 			if mxRecord, ok := ans.(*dns.MX); ok {
-				fmt.Printf("%s\t%s.\t%d\t%s\t%d\n", color.HiYellowString(queryType.Name), color.HiBlueString(domainName), mxRecord.Hdr.Ttl, mxRecord.Mx, mxRecord.Preference)
+				fmt.Printf("%s\t%s.\t%d\t%d\t%s\n", color.HiYellowString(queryType.Name), color.HiBlueString(domainName), mxRecord.Hdr.Ttl, mxRecord.Preference, mxRecord.Mx)
 			}
 		case dns.TypeTXT:
 			if txtRecord, ok := ans.(*dns.TXT); ok {
