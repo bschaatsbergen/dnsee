@@ -52,12 +52,12 @@ func SendDNSQuery(client *dns.Client, msg dns.Msg, dnsServerIP string) (*dns.Msg
 	if dnsServerIP == "" {
 		goOS := runtime.GOOS
 		if goOS == windows {
-			logrus.Fatal("error: Unable to retrieve DNS configuration on Windows. \nPlease specify a DNS server IP explicitely with the `--dns-server-ip` flag.")
+			logrus.Fatal("error: Unable to retrieve DNS configuration on Windows. \nPlease specify a DNS server IP explicitly with the `--dns-server-ip` flag.")
 		}
 		conf, err := dns.ClientConfigFromFile(resolverPath)
 		if err != nil {
 			logrus.Errorf("error: %s. Unable to retrieve DNS configuration.", err)
-			logrus.Fatal("Please specify a DNS server IP explicitely with the `--dns-server-ip` flag.")
+			logrus.Fatal("Please specify a DNS server IP explicitly with the `--dns-server-ip` flag.")
 		}
 		dnsServerIP = conf.Servers[0]
 	}
