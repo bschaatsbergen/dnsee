@@ -19,6 +19,7 @@ var (
 	version   string
 	flagStore model.Flagstore
 
+	//nolint:goconst
 	rootCmd = &cobra.Command{
 		Use:     "dnsee",
 		Short:   "dnsee - check DNS configurations quickly",
