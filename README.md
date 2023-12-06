@@ -45,6 +45,13 @@ $ dnsee google.com -q A
 A       google.com.     146     142.251.39.110
 ```
 
+Multiple types can be passed at once:
+```
+$ dnsee google.com -q 'A SOA'
+A	google.com.	105	142.251.36.46
+SOA	google.com.	20	ns1.google.com.	dns-admin.google.com.
+```
+
 ### Fetch all records using a different DNS server
 
 To get all records for a domain name using a different DNS server:
