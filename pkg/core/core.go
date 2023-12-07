@@ -62,7 +62,7 @@ func SendDNSQuery(client *dns.Client, msg dns.Msg, dnsServerIP string) (*dns.Msg
 		dnsServerIP = conf.Servers[0]
 	}
 
-	logrus.Debugf("Sending query to %s", dnsServerIP)
+	logrus.Debugf("Sending DNS query to %s", dnsServerIP)
 	response, timeDuration, err := client.Exchange(&msg, dnsServerIP+":53")
 
 	if err != nil {
