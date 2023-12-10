@@ -1,12 +1,13 @@
 package core
 
 import (
-	"fmt"
+	"os"
 	"runtime"
 	"time"
 
 	model "github.com/bschaatsbergen/dnsee/pkg/model"
 	"github.com/fatih/color"
+	"github.com/jedib0t/go-pretty/v6/table"
 	"github.com/miekg/dns"
 	"github.com/sirupsen/logrus"
 )
@@ -76,44 +77,89 @@ func SendDNSQuery(client *dns.Client, msg dns.Msg, dnsServerIP string) (*dns.Msg
 }
 
 // DisplayRecords displays the DNS records returned by the DNS server.
-func DisplayRecords(domainName string, queryType struct {
-	Type uint16
-	Name string
-}, answers []dns.RR) {
+func DisplayRecords(domainName string, answers []dns.RR) {
+	t := table.NewWriter()
+	t.SetOutputMirror(os.Stdout)
+	t.AppendHeader(table.Row{"Type", "Domain", "TTL", "Data"})
+	var rows []table.Row
 	for _, ans := range answers {
-		switch queryType.Type {
-		case dns.TypeA:
-			if aRecord, ok := ans.(*dns.A); ok {
-				fmt.Printf("%s\t%s.\t%d\t%s\n", color.HiYellowString(queryType.Name), color.HiBlueString(domainName), aRecord.Hdr.Ttl, aRecord.A)
+		var row table.Row
+		switch ans.(type) {
+		case *dns.A:
+			aRecord, _ := ans.(*dns.A)
+			row = table.Row{
+				color.HiYellowString("A"),
+				color.HiBlueString(domainName),
+				aRecord.Hdr.Ttl,
+				aRecord.A,
 			}
-		case dns.TypeAAAA:
-			if aaaaRecord, ok := ans.(*dns.AAAA); ok {
-				fmt.Printf("%s\t%s.\t%d\t%s\n", color.HiYellowString(queryType.Name), color.HiBlueString(domainName), aaaaRecord.Hdr.Ttl, aaaaRecord.AAAA)
+		case *dns.AAAA:
+			aaaaRecord, _ := ans.(*dns.AAAA)
+			row = table.Row{
+				color.HiYellowString("AAAA"),
+				color.HiBlueString(domainName),
+				aaaaRecord.Hdr.Ttl,
+				aaaaRecord.AAAA,
 			}
-		case dns.TypeCNAME:
-			if cnameRecord, ok := ans.(*dns.CNAME); ok {
-				fmt.Printf("%s\t%s.\t%d\t%s\n", color.HiYellowString(queryType.Name), color.HiBlueString(domainName), cnameRecord.Hdr.Ttl, cnameRecord.Target)
+		case *dns.CNAME:
+			cnameRecord, _ := ans.(*dns.CNAME)
+			row = table.Row{
+				"%s\t%s.\t%d\t%s\n",
+				color.HiYellowString("CNAME"),
+				color.HiBlueString(domainName),
+				cnameRecord.Hdr.Ttl,
+				cnameRecord.Target,
 			}
-		case dns.TypeMX:
-			if mxRecord, ok := ans.(*dns.MX); ok {
-				fmt.Printf("%s\t%s.\t%d\t%d\t%s\n", color.HiYellowString(queryType.Name), color.HiBlueString(domainName), mxRecord.Hdr.Ttl, mxRecord.Preference, mxRecord.Mx)
+		case *dns.MX:
+			mxRecord, _ := ans.(*dns.MX)
+			row = table.Row{
+				color.HiYellowString("MX"),
+				color.HiBlueString(domainName),
+				mxRecord.Hdr.Ttl,
+				mxRecord.Preference,
+				mxRecord.Mx,
 			}
-		case dns.TypeTXT:
-			if txtRecord, ok := ans.(*dns.TXT); ok {
-				fmt.Printf("%s\t%s.\t%d\t%s\n", color.HiYellowString(queryType.Name), color.HiBlueString(domainName), txtRecord.Hdr.Ttl, txtRecord.Txt[0])
+		case *dns.TXT:
+			txtRecord, _ := ans.(*dns.TXT)
+			row = table.Row{
+				color.HiYellowString("TXT"),
+				color.HiBlueString(domainName),
+				txtRecord.Hdr.Ttl,
+				txtRecord.Txt[0],
 			}
-		case dns.TypeNS:
-			if nsRecord, ok := ans.(*dns.NS); ok {
-				fmt.Printf("%s\t%s.\t%d\t%s\n", color.HiYellowString(queryType.Name), color.HiBlueString(domainName), nsRecord.Hdr.Ttl, nsRecord.Ns)
+		case *dns.NS:
+			nsRecord, _ := ans.(*dns.NS)
+			row = table.Row{
+				color.HiYellowString("NS"),
+				color.HiBlueString(domainName),
+				nsRecord.Hdr.Ttl,
+				nsRecord.Ns,
 			}
-		case dns.TypeSOA:
-			if soaRecord, ok := ans.(*dns.SOA); ok {
-				fmt.Printf("%s\t%s.\t%d\t%s\t%s\n", color.HiYellowString(queryType.Name), color.HiBlueString(domainName), soaRecord.Hdr.Ttl, soaRecord.Ns, soaRecord.Mbox)
+		case *dns.SOA:
+			soaRecord, _ := ans.(*dns.SOA)
+			row = table.Row{
+				color.HiYellowString("SOA"),
+				color.HiBlueString(domainName),
+				soaRecord.Hdr.Ttl,
+				soaRecord.Ns,
+				soaRecord.Mbox,
 			}
-		case dns.TypePTR:
-			if ptrRecord, ok := ans.(*dns.PTR); ok {
-				fmt.Printf("%s\t%s.\t%d\t%s\n", color.HiYellowString(queryType.Name), color.HiBlueString(domainName), ptrRecord.Hdr.Ttl, ptrRecord.Ptr)
+		case *dns.PTR:
+			ptrRecord, _ := ans.(*dns.PTR)
+			row = table.Row{
+				color.HiYellowString("PTR"),
+				color.HiBlueString(domainName),
+				ptrRecord.Hdr.Ttl,
+				ptrRecord.Ptr,
 			}
 		}
+		rows = append(rows, row)
 	}
+	t.AppendRows(rows)
+	t.Style().Options.DrawBorder = false
+	t.Style().Options.SeparateColumns = false
+	t.Style().Options.SeparateFooter = false
+	t.Style().Options.SeparateHeader = false
+	t.Style().Options.SeparateRows = false
+	t.Render()
 }

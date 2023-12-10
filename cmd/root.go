@@ -47,6 +47,8 @@ var (
 				queryTypes = core.FilterQueryTypes(queryTypes, flagStore.UserSpecifiedQueryType)
 			}
 
+			var entries []dns.RR
+
 			// Send a DNS query for each query type in the queryTypes slice
 			for _, queryType := range queryTypes {
 				msg := core.PrepareDNSQuery(domainName, queryType.Type)
@@ -56,8 +58,10 @@ var (
 					log.Fatal(err)
 				}
 
-				core.DisplayRecords(domainName, queryType, response.Answer)
+				entries = append(entries, response.Answer...)
 			}
+
+			core.DisplayRecords(domainName, entries)
 		},
 	}
 )
@@ -92,7 +96,7 @@ func (f *PlainFormatter) Format(entry *log.Entry) ([]byte, error) {
 	return []byte(fmt.Sprintf("%s\n", entry.Message)), nil
 }
 
-func toggleDebug(cmd *cobra.Command, args []string) {
+func toggleDebug(_ *cobra.Command, _ []string) {
 	if flagStore.Debug {
 		log.SetLevel(log.DebugLevel)
 		log.SetFormatter(&log.TextFormatter{
