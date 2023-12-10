@@ -3,6 +3,7 @@ package core
 import (
 	"fmt"
 	"runtime"
+	"strings"
 	"time"
 
 	model "github.com/bschaatsbergen/dnsee/pkg/model"
@@ -29,13 +30,17 @@ func GetQueryTypes() []model.QueryType {
 }
 
 // FilterQueryTypes filters the queryTypes slice to only include the query type specified by the user.
-func FilterQueryTypes(queryTypes []model.QueryType, userSpecifiedQueryType string) []model.QueryType {
+func FilterQueryTypes(queryTypes []model.QueryType, userSpecifiedQueryTypes []string) []model.QueryType {
 	var filteredQueryTypes []model.QueryType
-	for _, queryType := range queryTypes {
-		if queryType.Name == userSpecifiedQueryType {
-			filteredQueryTypes = append(filteredQueryTypes, queryType)
-			break
+	for _, userSpecifiedQueryType := range userSpecifiedQueryTypes {
+		for _, queryType := range queryTypes {
+			if queryType.Name == strings.ToUpper(userSpecifiedQueryType) {
+				filteredQueryTypes = append(filteredQueryTypes, queryType)
+			}
 		}
+	}
+	if len(filteredQueryTypes) == 0 {
+		logrus.Fatal("error: Invalid or unsupported query type provided.")
 	}
 	return filteredQueryTypes
 }
