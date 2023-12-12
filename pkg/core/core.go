@@ -2,6 +2,7 @@ package core
 
 import (
 	"fmt"
+	"net"
 	"runtime"
 	"time"
 
@@ -60,6 +61,11 @@ func SendDNSQuery(client *dns.Client, msg dns.Msg, dnsServerIP string) (*dns.Msg
 			logrus.Fatal("Please specify a DNS server IP explicitly with the `--dns-server-ip` flag.")
 		}
 		dnsServerIP = conf.Servers[0]
+
+	}
+	// If the server IP is IPv6, wrap it in square brackets to remove ambiguity from port number and address.
+	if net.ParseIP(dnsServerIP).To4() == nil {
+		dnsServerIP = "[" + dnsServerIP + "]"
 	}
 
 	logrus.Debugf("Sending DNS query to %s", dnsServerIP)
