@@ -61,7 +61,6 @@ func SendDNSQuery(client *dns.Client, msg dns.Msg, dnsServerIP, dnsServerPort st
 			logrus.Fatal("Please specify a DNS server IP explicitly with the `--dns-server-ip` flag.")
 		}
 		dnsServerIP = conf.Servers[0]
-
 	}
 
 	addr := net.JoinHostPort(dnsServerIP, dnsServerPort)
