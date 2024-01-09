@@ -50,6 +50,7 @@ func PrepareDNSQuery(domainName string, queryType uint16) dns.Msg {
 
 // SendDNSQuery sends a DNS query to a given DNS server.
 func SendDNSQuery(client *dns.Client, msg dns.Msg, dnsServerIP string) (*dns.Msg, time.Duration, error) {
+func SendDNSQuery(client *dns.Client, msg dns.Msg, dnsServerIP, dnsServerPort string) (*dns.Msg, time.Duration, error) {
 	if dnsServerIP == "" {
 		goOS := runtime.GOOS
 		if goOS == windows {
