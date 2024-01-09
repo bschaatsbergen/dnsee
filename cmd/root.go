@@ -51,7 +51,6 @@ var (
 			for _, queryType := range queryTypes {
 				msg := core.PrepareDNSQuery(domainName, queryType.Type)
 
-				response, _, err := core.SendDNSQuery(&client, msg, flagStore.DNSServerIP)
 				response, _, err := core.SendDNSQuery(&client, msg, flagStore.DNSServerIP, flagStore.DNSServerPort)
 				if err != nil {
 					log.Fatal(err)
