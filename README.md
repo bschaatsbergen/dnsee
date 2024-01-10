@@ -53,7 +53,7 @@ To get all records for a domain name using a different DNS server:
 $ dnsee google.com --dns-server-ip 1.1.1.1
 A       google.com.     146     142.251.39.110
 AAAA    google.com.     300     2a00:1450:400e:803::200e
-MX      google.com.     193     smtp.google.com.        10
+MX      google.com.     193     10	smtp.google.com.
 NS      google.com.     103     ns1.google.com.
 NS      google.com.     103     ns4.google.com.
 NS      google.com.     103     ns3.google.com.
