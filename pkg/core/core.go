@@ -87,36 +87,50 @@ func DisplayRecords(domainName string, queryType struct {
 		switch queryType.Type {
 		case dns.TypeA:
 			if aRecord, ok := ans.(*dns.A); ok {
-				fmt.Printf("%s\t%s.\t%d\t%s\n", color.HiYellowString(queryType.Name), color.HiBlueString(domainName), aRecord.Hdr.Ttl, aRecord.A)
+				fmt.Printf("%s\t%s.\t%s\t%s\n", color.HiYellowString(queryType.Name), color.HiBlueString(domainName), FormatTTL(aRecord.Hdr.Ttl), aRecord.A)
 			}
 		case dns.TypeAAAA:
 			if aaaaRecord, ok := ans.(*dns.AAAA); ok {
-				fmt.Printf("%s\t%s.\t%d\t%s\n", color.HiYellowString(queryType.Name), color.HiBlueString(domainName), aaaaRecord.Hdr.Ttl, aaaaRecord.AAAA)
+				fmt.Printf("%s\t%s.\t%s\t%s\n", color.HiYellowString(queryType.Name), color.HiBlueString(domainName), FormatTTL(aaaaRecord.Hdr.Ttl), aaaaRecord.AAAA)
 			}
 		case dns.TypeCNAME:
 			if cnameRecord, ok := ans.(*dns.CNAME); ok {
-				fmt.Printf("%s\t%s.\t%d\t%s\n", color.HiYellowString(queryType.Name), color.HiBlueString(domainName), cnameRecord.Hdr.Ttl, cnameRecord.Target)
+				fmt.Printf("%s\t%s.\t%s\t%s\n", color.HiYellowString(queryType.Name), color.HiBlueString(domainName), FormatTTL(cnameRecord.Hdr.Ttl), cnameRecord.Target)
 			}
 		case dns.TypeMX:
 			if mxRecord, ok := ans.(*dns.MX); ok {
-				fmt.Printf("%s\t%s.\t%d\t%d\t%s\n", color.HiYellowString(queryType.Name), color.HiBlueString(domainName), mxRecord.Hdr.Ttl, mxRecord.Preference, mxRecord.Mx)
+				fmt.Printf("%s\t%s.\t%s\t%d\t%s\n", color.HiYellowString(queryType.Name), color.HiBlueString(domainName), FormatTTL(mxRecord.Hdr.Ttl), mxRecord.Preference, mxRecord.Mx)
 			}
 		case dns.TypeTXT:
 			if txtRecord, ok := ans.(*dns.TXT); ok {
-				fmt.Printf("%s\t%s.\t%d\t%s\n", color.HiYellowString(queryType.Name), color.HiBlueString(domainName), txtRecord.Hdr.Ttl, txtRecord.Txt[0])
+				fmt.Printf("%s\t%s.\t%s\t%s\n", color.HiYellowString(queryType.Name), color.HiBlueString(domainName), FormatTTL(txtRecord.Hdr.Ttl), txtRecord.Txt[0])
 			}
 		case dns.TypeNS:
 			if nsRecord, ok := ans.(*dns.NS); ok {
-				fmt.Printf("%s\t%s.\t%d\t%s\n", color.HiYellowString(queryType.Name), color.HiBlueString(domainName), nsRecord.Hdr.Ttl, nsRecord.Ns)
+				fmt.Printf("%s\t%s.\t%s\t%s\n", color.HiYellowString(queryType.Name), color.HiBlueString(domainName), FormatTTL(nsRecord.Hdr.Ttl), nsRecord.Ns)
 			}
 		case dns.TypeSOA:
 			if soaRecord, ok := ans.(*dns.SOA); ok {
-				fmt.Printf("%s\t%s.\t%d\t%s\t%s\n", color.HiYellowString(queryType.Name), color.HiBlueString(domainName), soaRecord.Hdr.Ttl, soaRecord.Ns, soaRecord.Mbox)
+				fmt.Printf("%s\t%s.\t%s\t%s\t%s\n", color.HiYellowString(queryType.Name), color.HiBlueString(domainName), FormatTTL(soaRecord.Hdr.Ttl), soaRecord.Ns, soaRecord.Mbox)
 			}
 		case dns.TypePTR:
 			if ptrRecord, ok := ans.(*dns.PTR); ok {
-				fmt.Printf("%s\t%s.\t%d\t%s\n", color.HiYellowString(queryType.Name), color.HiBlueString(domainName), ptrRecord.Hdr.Ttl, ptrRecord.Ptr)
+				fmt.Printf("%s\t%s.\t%s\t%s\n", color.HiYellowString(queryType.Name), color.HiBlueString(domainName), FormatTTL(ptrRecord.Hdr.Ttl), ptrRecord.Ptr)
 			}
 		}
+	}
+}
+
+func FormatTTL(ttl uint32) string {
+	duration := time.Duration(ttl) * time.Second
+	hours := int(duration.Hours())
+	minutes := int(duration.Minutes()) % 60
+	seconds := int(duration.Seconds()) % 60
+	if hours > 0 {
+		return fmt.Sprintf("%02dh%02dm%02ds", hours, minutes, seconds)
+	} else if minutes > 0 {
+		return fmt.Sprintf("%02dm%02ds   ", minutes, seconds)
+	} else {
+		return fmt.Sprintf("%02ds      ", seconds)
 	}
 }
