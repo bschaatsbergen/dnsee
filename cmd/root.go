@@ -25,10 +25,10 @@ var (
 		Short:   "dnsee - check DNS configurations quickly",
 		Version: version,
 		PreRun:  toggleDebug,
-		Example: "dnsee " + color.New(color.FgBlue).SprintFunc()("example.com") + "." +
-			"\n" + "dnsee " + color.New(color.FgBlue).SprintFunc()("example.com") + "." + " -q A" +
-			"\n" + "dnsee " + color.New(color.FgBlue).SprintFunc()("example.com") + "." + " --dns-server-ip 8.8.8.8" +
-			"\n" + "dnsee " + color.New(color.FgBlue).SprintFunc()("example.com") + "." + " --debug",
+		Example: "dnsee " + color.New(color.FgBlue).SprintFunc()("example.com") +
+			"\n" + "dnsee " + color.New(color.FgBlue).SprintFunc()("example.com") + " -q A" +
+			"\n" + "dnsee " + color.New(color.FgBlue).SprintFunc()("example.com") + " --dns-server-ip 8.8.8.8" +
+			"\n" + "dnsee " + color.New(color.FgBlue).SprintFunc()("example.com") + " --debug",
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(args) != 1 {
 				fmt.Println("error: provide a domain name")
