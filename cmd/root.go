@@ -51,7 +51,7 @@ var (
 			for _, queryType := range queryTypes {
 				msg := core.PrepareDNSQuery(domainName, queryType.Type)
 
-				response, _, err := core.SendDNSQuery(&client, msg, flagStore.DNSServerIP)
+				response, _, err := core.SendDNSQuery(&client, msg, flagStore.DNSServerIP, flagStore.DNSServerPort)
 				if err != nil {
 					log.Fatal(err)
 				}
@@ -66,6 +66,7 @@ func init() {
 	setupCobraUsageTemplate()
 	rootCmd.CompletionOptions.DisableDefaultCmd = true
 	rootCmd.Flags().StringVar(&flagStore.DNSServerIP, "dns-server-ip", "", "IP address of the DNS server")
+	rootCmd.Flags().StringVar(&flagStore.DNSServerPort, "dns-server-port", "53", "port of the DNS server")
 	rootCmd.Flags().StringVarP(&flagStore.UserSpecifiedQueryType, "query-type", "q", "", "specific query type to filter on")
 	rootCmd.Flags().BoolVarP(&flagStore.Debug, "debug", "d", false, "verbose logging")
 }

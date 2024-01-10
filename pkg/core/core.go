@@ -2,6 +2,7 @@ package core
 
 import (
 	"fmt"
+	"net"
 	"runtime"
 	"time"
 
@@ -48,7 +49,7 @@ func PrepareDNSQuery(domainName string, queryType uint16) dns.Msg {
 }
 
 // SendDNSQuery sends a DNS query to a given DNS server.
-func SendDNSQuery(client *dns.Client, msg dns.Msg, dnsServerIP string) (*dns.Msg, time.Duration, error) {
+func SendDNSQuery(client *dns.Client, msg dns.Msg, dnsServerIP, dnsServerPort string) (*dns.Msg, time.Duration, error) {
 	if dnsServerIP == "" {
 		goOS := runtime.GOOS
 		if goOS == windows {
@@ -62,8 +63,10 @@ func SendDNSQuery(client *dns.Client, msg dns.Msg, dnsServerIP string) (*dns.Msg
 		dnsServerIP = conf.Servers[0]
 	}
 
-	logrus.Debugf("Sending DNS query to %s", dnsServerIP)
-	response, timeDuration, err := client.Exchange(&msg, dnsServerIP+":53")
+	addr := net.JoinHostPort(dnsServerIP, dnsServerPort)
+
+	logrus.Debugf("Sending DNS query to %s", addr)
+	response, timeDuration, err := client.Exchange(&msg, addr)
 
 	if err != nil {
 		logrus.Debug("Failed to receive DNS response.")
