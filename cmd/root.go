@@ -45,11 +45,8 @@ var (
 			typesToQuery := supportedQueryTypes
 
 			// If a specific query type is provided, filter the queryTypes slice to only include that type
-			if flagStore.UserSpecifiedQueryType != "" {
-				// Parse the user-specified query type(s) into a slice of query types
-				// Example: "A AAAA" -> []string{"A", "AAAA"}
-				userSpecifiedQueryTypes := strings.Fields(flagStore.UserSpecifiedQueryType)
-				typesToQuery = core.FilterQueryTypes(supportedQueryTypes, userSpecifiedQueryTypes)
+			if len(flagStore.UserSpecifiedQueryTypes) > 0 {
+				typesToQuery = core.FilterQueryTypes(supportedQueryTypes, flagStore.UserSpecifiedQueryTypes)
 			}
 
 			// Send a DNS query for each query type in the queryTypes slice
@@ -71,7 +68,7 @@ func init() {
 	setupCobraUsageTemplate()
 	rootCmd.CompletionOptions.DisableDefaultCmd = true
 	rootCmd.Flags().StringVar(&flagStore.DNSServerIP, "dns-server-ip", "", "IP address of the DNS server")
-	rootCmd.Flags().StringVarP(&flagStore.UserSpecifiedQueryType, "query-type", "q", "", "specific query type(s) to filter on")
+	rootCmd.Flags().StringSliceVarP(&flagStore.UserSpecifiedQueryTypes, "query-types", "q", queryTypesToStrings(core.GetQueryTypes()), "specific query type(s) to filter on")
 	rootCmd.Flags().BoolVarP(&flagStore.Debug, "debug", "d", false, "verbose logging")
 }
 
@@ -95,6 +92,14 @@ func Execute() {
 
 func (f *PlainFormatter) Format(entry *log.Entry) ([]byte, error) {
 	return []byte(fmt.Sprintf("%s\n", entry.Message)), nil
+}
+
+func queryTypesToStrings(queryTypes []model.QueryType) []string {
+	var strings []string
+	for _, s := range queryTypes {
+		strings = append(strings, s.Name)
+	}
+	return strings
 }
 
 func toggleDebug(cmd *cobra.Command, args []string) {
