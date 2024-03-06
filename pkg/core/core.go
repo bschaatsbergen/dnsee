@@ -6,6 +6,7 @@ import (
 	"os"
 	"runtime"
 	"strconv"
+	"strings"
 	"time"
 
 	model "github.com/bschaatsbergen/dnsee/pkg/model"
@@ -103,7 +104,7 @@ func DisplayRecords(domainName string, results []model.QueryResult) {
 				}
 			case dns.TypeMX:
 				if mxRecord, ok := record.(*dns.MX); ok {
-					fmt.Fprintf(w, "%s\t%s.\t%s\t%s\t%s\n", color.HiYellowString(result.QueryType.Name), color.HiBlueString(domainName), color.HiMagentaString(FormatTTL(mxRecord.Hdr.Ttl)), color.HiRedString(strconv.FormatUint(uint64(mxRecord.Preference), 10)), color.HiWhiteString(mxRecord.Mx))
+					fmt.Fprintf(w, "%s\t%s.\t%s\t%s\n", color.HiYellowString(result.QueryType.Name), color.HiBlueString(domainName), color.HiMagentaString(FormatTTL(mxRecord.Hdr.Ttl)), strings.Join([]string{color.HiRedString(strconv.FormatUint(uint64(mxRecord.Preference), 10)), color.HiWhiteString(mxRecord.Mx)}, "  "))
 				}
 			case dns.TypeTXT:
 				if txtRecord, ok := record.(*dns.TXT); ok {
