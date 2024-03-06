@@ -83,7 +83,7 @@ func SendDNSQuery(client *dns.Client, msg dns.Msg, dnsServerIP, dnsServerPort st
 
 func DisplayRecords(domainName string, results []model.QueryResult) {
 
-	w := ansiterm.NewTabWriter(os.Stdout, 8, 8, 1, ' ', 0)
+	w := ansiterm.NewTabWriter(os.Stdout, 8, 8, 4, ' ', 0)
 	w.SetColorCapable(true)
 
 	for _, result := range results {
