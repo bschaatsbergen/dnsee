@@ -8,10 +8,15 @@ require (
 	github.com/spf13/cobra v1.8.0
 )
 
-require golang.org/x/net v0.20.0 // indirect
+require (
+	github.com/lunixbochs/vtclean v1.0.0 // indirect
+	github.com/stretchr/testify v1.8.4 // indirect
+	golang.org/x/net v0.20.0 // indirect
+)
 
 require (
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
+	github.com/juju/ansiterm v1.0.0
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/sirupsen/logrus v1.9.3

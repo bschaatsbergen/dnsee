@@ -47,6 +47,7 @@ var (
 				queryTypes = core.FilterQueryTypes(queryTypes, flagStore.UserSpecifiedQueryType)
 			}
 
+			var results []model.QueryResult
 			// Send a DNS query for each query type in the queryTypes slice
 			for _, queryType := range queryTypes {
 				msg := core.PrepareDNSQuery(domainName, queryType.Type)
@@ -55,9 +56,11 @@ var (
 				if err != nil {
 					log.Fatal(err)
 				}
+				results = append(results, model.QueryResult{QueryType: queryType, Records: response.Answer})
 
-				core.DisplayRecords(domainName, queryType, response.Answer)
 			}
+			// Print the results
+			core.DisplayRecords(domainName, results)
 		},
 	}
 )
