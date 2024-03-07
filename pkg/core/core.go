@@ -69,7 +69,7 @@ func SendDNSQuery(client *dns.Client, msg dns.Msg, dnsServerIP, dnsServerPort st
 
 	addr := net.JoinHostPort(dnsServerIP, dnsServerPort)
 
-	logrus.Debugf("Sending DNS query to %s", addr)
+	logrus.Debugf("Sending DNS query to %s with query type: %s", dnsServerIP, dns.TypeToString[msg.Question[0].Qtype])
 	response, timeDuration, err := client.Exchange(&msg, addr)
 
 	if err != nil {
