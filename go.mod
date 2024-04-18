@@ -4,14 +4,14 @@ go 1.21.4
 
 require (
 	github.com/fatih/color v1.16.0
-	github.com/miekg/dns v1.1.58
+	github.com/miekg/dns v1.1.59
 	github.com/spf13/cobra v1.8.0
 )
 
 require (
 	github.com/lunixbochs/vtclean v1.0.0 // indirect
 	github.com/stretchr/testify v1.8.4 // indirect
-	golang.org/x/net v0.20.0 // indirect
+	golang.org/x/net v0.22.0 // indirect
 )
 
 require (
@@ -21,7 +21,7 @@ require (
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/pflag v1.0.5 // indirect
-	golang.org/x/mod v0.14.0 // indirect
-	golang.org/x/sys v0.16.0 // indirect
-	golang.org/x/tools v0.17.0 // indirect
+	golang.org/x/mod v0.16.0 // indirect
+	golang.org/x/sys v0.18.0 // indirect
+	golang.org/x/tools v0.19.0 // indirect
 )
