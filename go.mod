@@ -11,7 +11,7 @@ require (
 require (
 	github.com/lunixbochs/vtclean v1.0.0 // indirect
 	github.com/stretchr/testify v1.8.4 // indirect
-	golang.org/x/net v0.22.0 // indirect
+	golang.org/x/net v0.23.0 // indirect
 )
 
 require (
