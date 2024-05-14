@@ -3,7 +3,7 @@ module github.com/bschaatsbergen/dnsee
 go 1.21.4
 
 require (
-	github.com/fatih/color v1.16.0
+	github.com/fatih/color v1.17.0
 	github.com/miekg/dns v1.1.59
 	github.com/spf13/cobra v1.8.0
 )
