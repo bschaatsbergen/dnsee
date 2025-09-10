@@ -6,7 +6,7 @@ toolchain go1.24.1
 
 require (
 	github.com/fatih/color v1.18.0
-	github.com/miekg/dns v1.1.67
+	github.com/miekg/dns v1.1.68
 	github.com/spf13/cobra v1.10.1
 )
 
